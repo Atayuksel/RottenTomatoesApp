@@ -39,7 +39,8 @@
 -(void)searchDatabase:(NSString *)address
 {
     NSString *tmp = @"http://api.rottentomatoes.com/api/public/v1.0/movies.json?apikey=n594qzwyec5cdgr3tdrpfee3&q=";
-    tmp = [tmp stringByAppendingString:address];
+    NSString *filmName = [address stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+    tmp = [tmp stringByAppendingString:filmName];
     tmp = [tmp stringByAppendingString:@"&page_limit=50"];
     NSURL *url = [NSURL URLWithString:tmp];
     

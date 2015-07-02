@@ -43,12 +43,30 @@
         if ([self.reviews count] > 0){
             NSDictionary *reviewDetail = [self.reviews objectAtIndex:0];
             NSString *tmp;
-            NSString *reviewText = [reviewDetail objectForKey:@"quote"];
+            
+            // Initialize
+            NSString *publication_text = [reviewDetail objectForKey:@"publication"];
+            NSString *review_quote = [reviewDetail objectForKey:@"quote"];
+            NSString *criticName = [reviewDetail objectForKey:@"critic"];
+            
+            NSString *reviewText = publication_text;
+            reviewText = [reviewText stringByAppendingString:@" - "];
+            reviewText = [reviewText stringByAppendingString:criticName];
+            reviewText = [reviewText stringByAppendingString:@"\n"];
+            reviewText = [reviewText stringByAppendingString:review_quote];
+            
             for (int i = 1; i < [self.reviews count]; i++){
                 reviewDetail = [self.reviews objectAtIndex:i];
-                tmp = [reviewDetail objectForKey:@"quote"];
+                review_quote = [reviewDetail objectForKey:@"quote"];
+                criticName = [reviewDetail objectForKey:@"critic"];
+                publication_text = [reviewDetail objectForKey:@"publication"];
+            
                 reviewText = [reviewText stringByAppendingString:@"\n\n"];
-                reviewText = [reviewText stringByAppendingString:tmp];
+                reviewText = [reviewText stringByAppendingString:publication_text];
+                reviewText = [reviewText stringByAppendingString:@" - "];
+                reviewText = [reviewText stringByAppendingString:criticName];
+                reviewText = [reviewText stringByAppendingString:@"\n"];
+                reviewText = [reviewText stringByAppendingString:review_quote];
             }
             [self.reviewLabel setText:reviewText];
             

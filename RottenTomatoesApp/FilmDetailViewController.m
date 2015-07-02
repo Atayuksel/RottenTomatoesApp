@@ -12,6 +12,8 @@
 @interface FilmDetailViewController ()
 @property (strong, nonatomic) FilmReviewViewController *filmReviewViewController;
 @property (weak, nonatomic) IBOutlet UIImageView *posterImageView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *topMarginConstraint;
+@property (weak, nonatomic) IBOutlet UIView *filmDetailView;
 @property (weak, nonatomic) IBOutlet UILabel *filmTitle;
 @property (weak, nonatomic) IBOutlet UILabel *filmYear;
 @property (weak, nonatomic) IBOutlet UILabel *filmCritics;
@@ -29,14 +31,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+   
     // ------------------------------
     // IMAGE DOWNLOAD AND ADD TO VIEW
     id tmp = [self.filmDetail objectForKey:@"posters"];
-    id tmp2 = [tmp objectForKey:@"original"];
+    NSString *tmp2 = [tmp objectForKey:@"original"];
     
+    tmp2 = [self IncreasePosterRes:tmp2];
+    NSURL *url = [NSURL URLWithString:tmp2];
     SDWebImageManager *manager = [SDWebImageManager sharedManager];
-    [manager downloadImageWithURL:tmp2
+    [manager downloadImageWithURL:url
                           options:0
                          progress:^(NSInteger receivedSize, NSInteger expectedSize) {
                              // progression tracking code
@@ -51,7 +55,6 @@
     
     // Film Title
     NSString *title = [self.filmDetail objectForKey:@"title"];
-    [self.filmSynopsis sizeToFit];
     [self.filmTitle setText:title];
     
     // Film Year
@@ -78,8 +81,34 @@
     if ([self.filmSynopsis.text  isEqual: @""]){
         self.filmSynopsis.text = @"No synopsis for this movie";
     }
-    // Do any additional setup after loading the view.
-    
+    self.topMarginConstraint.constant = 395;
+}
+- (IBAction)swipeUp:(UISwipeGestureRecognizer *)sender {
+    self.topMarginConstraint.constant = 20;
+    [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:0 options:0 animations:^{
+        [self.view layoutIfNeeded];
+    } completion:^(BOOL finished) {
+    }];
+}
+
+- (IBAction)swipeDown:(UISwipeGestureRecognizer *)sender {
+    self.topMarginConstraint.constant = 395;
+    [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:0 options:0 animations:^{
+        [self.view layoutIfNeeded];
+    } completion:^(BOOL finished) {
+    }];
+}
+
+
+
+- (NSString *)IncreasePosterRes: (NSString*)url {
+    NSRange range = [url rangeOfString:@".*cloudfront.net/" options:NSRegularExpressionSearch];
+    NSString *highresURL = url;
+    if (range.length > 0) {
+        highresURL = [url stringByReplacingCharactersInRange:range withString:@"https://content5.flixster.com/"];
+    }
+    //NSString *filmName = [address stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+    return highresURL;
 }
 
 - (void)didReceiveMemoryWarning {

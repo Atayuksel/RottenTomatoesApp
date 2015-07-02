@@ -73,6 +73,14 @@
     NSDictionary *tempDictionary = [[NSDictionary alloc] init];
     tempDictionary= [self.openingMovies objectAtIndex:indexPath.row];
     cell.textLabel.text = [tempDictionary objectForKey:@"title"];
+    // Thumbnail ImageView in Cell
+    id tmp = [tempDictionary objectForKey:@"posters"];
+    id tmp2 = [tmp objectForKey:@"thumbnail"];
+    
+    [cell.imageView sd_setImageWithURL:tmp2 placeholderImage:[UIImage imageNamed:@"placeholder.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+        [cell setNeedsLayout];
+    }];
+     
     return cell;
     
 }
