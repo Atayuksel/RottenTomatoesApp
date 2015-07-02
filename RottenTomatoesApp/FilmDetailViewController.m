@@ -107,7 +107,6 @@
     if (range.length > 0) {
         highresURL = [url stringByReplacingCharactersInRange:range withString:@"https://content5.flixster.com/"];
     }
-    //NSString *filmName = [address stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
     return highresURL;
 }
 
